@@ -116,7 +116,11 @@ class Board:
         Returns:
             True if we have failed to fill out the puzzle, False otherwise
         """
-        pass
+        for i in range(self.size):
+            for j in range(self.size):
+                if self.rows[i,j]==[] or self.rows[j,i]==[]:
+                 return False
+        return True
 
     def goal_test(self) -> bool:
         """Check if we've completed the puzzle (if we've placed all the numbers).
@@ -140,7 +144,12 @@ class Board:
             assignment - value to place at given row, column coordinate
         """
         self.num_nums_placed+=1
-        self.rows[row[column[any]]]=assignment
+        self.rows[row][column]=assignment
+        for i in range(self.size):
+            remove_if_exists(self.rows[row][i], assignment) 
+            remove_if_exists(self.rows[i][column], assignment)
+        for i,j in self.subgrid_coordinates(row,column):
+            remove_if_exists(self.rows[i][j], assignment)
         
         
 
@@ -179,6 +188,7 @@ if __name__ == "__main__":
     b=Board()
     b.update(0,0,4)
     b.print_pretty()
+    print(b)
    
     # # CODE BELOW HERE RUNS YOUR BFS/DFS
     # print("<<<<<<<<<<<<<< Solving Sudoku >>>>>>>>>>>>>>")
