@@ -106,14 +106,26 @@ class Board:
         Returns:
             a tuple of row, column index identifying the most constrained cell
         """
-        minValue=self.size
-        pos=(0,0)
+        # minValue=self.size
+        # pos=(0,0)
+        # for i in range(self.size):
+        #     for j in range(self.size):
+        #         # print(self.rows[i][j])
+        #         if isinstance(self.rows[i],[j], list) and len(self.rows[i][j])<minValue:
+        #             minValue= len(self.rows[i],[j])
+        #             pos=(i,j)
+        # return pos
+        mini = self.size
+        pos = (0, 0)
         for i in range(self.size):
             for j in range(self.size):
                 # print(self.rows[i][j])
-                if isinstance(self.rows[i],[j], list) and len(self.rows[i],[j], list<minValue):
-                    minValue=self.rows[i],[j]
-                    pos=(i,j)
+                if isinstance(self.rows[i][j], list) and len(self.rows[i][j]) < mini:
+                    # print(self.rows[i][j])
+                    mini = len(self.rows[i][j])
+                    pos = (i, j)
+                    # print(mini)
+                    # print(pos)
         return pos
     def failure_test(self) -> bool:
         """Check if we've failed to correctly fill out the puzzle. If we find a cell
@@ -174,9 +186,12 @@ def DFS(state: Board) -> Board:
         either None in the case of invalid input or a solved board
     """
     the_stack = Stack([state])
+    count=0
     while not the_stack.is_empty():
         curr= the_stack.pop()
-        if curr.goal_state():
+        count+=1
+        if curr.goal_test():
+            print(f"It took {count} iterations to solve")
             return curr
         elif not curr.failure_test():
             row, col= curr.find_most_constrained_cell()
@@ -202,9 +217,12 @@ def BFS(state: Board) -> Board:
         either None in the case of invalid input or a solved board
     """
     the_queue = Queue([state])
+    count=0
     while not the_queue.is_empty():
         curr= the_queue.pop()
-        if curr.goal_state():
+        count+=1
+        if curr.goal_test():
+            print(f"It took {count} iterations to solve")
             return curr
         elif not curr.failure_test():
             row, col= curr.find_most_constrained_cell()
@@ -221,20 +239,20 @@ if __name__ == "__main__":
     # # CODE BELOW HERE RUNS YOUR BFS/DFS
     # print("<<<<<<<<<<<<<< Solving Sudoku >>>>>>>>>>>>>>")
 
-    # def test_dfs_or_bfs(use_dfs: bool, moves: List[Tuple[int, int, int]]) -> None:
-    #     b = Board()
-    #     # make initial moves to set up board
-    #     for move in moves:
-    #         b.update(*move)
+    def test_dfs_or_bfs(use_dfs: bool, moves: List[Tuple[int, int, int]]) -> None:
+        b = Board()
+        # make initial moves to set up board
+        for move in moves:
+            b.update(*move)
 
-    #     # print initial board
-    #     print("<<<<< Initial Board >>>>>")
-    #     b.print_pretty()
-    #     # solve board
-    #     solution = (DFS if use_dfs else BFS)(b)
-    #     # print solved board
-    #     print("<<<<< Solved Board >>>>>")
-    #     solution.print_pretty()
+        # print initial board
+        print("<<<<< Initial Board >>>>>")
+        b.print_pretty()
+        # solve board
+        solution = (DFS if use_dfs else BFS)(b)
+        # print solved board
+        print("<<<<< Solved Board >>>>>")
+        solution.print_pretty()
 
     # # sets of moves for the different games
     first_moves = [
@@ -353,33 +371,28 @@ if __name__ == "__main__":
     # assert g.goal_test() == True, "goal test test"
     # print("All part 2 tests passed! Testing DFS and BFS next:")
 
-    # print("<<<<<<<<<<<<<< Testing DFS on First Game >>>>>>>>>>>>>>")
+    print("<<<<<<<<<<<<<< Testing DFS on First Game >>>>>>>>>>>>>>")
 
-    # test_dfs_or_bfs(True, first_moves)
+    test_dfs_or_bfs(True, first_moves)
 
-    # print("<<<<<<<<<<<<<< Testing DFS on Second Game >>>>>>>>>>>>>>")
+    print("<<<<<<<<<<<<<< Testing DFS on Second Game >>>>>>>>>>>>>>")
 
-    # test_dfs_or_bfs(True, second_moves)
+    test_dfs_or_bfs(True, second_moves)
 
-    # print("<<<<<<<<<<<<<< Testing BFS on First Game >>>>>>>>>>>>>>")
+    print("<<<<<<<<<<<<<< Testing BFS on First Game >>>>>>>>>>>>>>")
 
-    # test_dfs_or_bfs(False, first_moves)
+    test_dfs_or_bfs(False, first_moves)
 
-    # print("<<<<<<<<<<<<<< Testing BFS on Second Game >>>>>>>>>>>>>>")
+    print("<<<<<<<<<<<<<< Testing BFS on Second Game >>>>>>>>>>>>>>")
 
-    # test_dfs_or_bfs(False, second_moves)
-    # b=Board()
-    # b.update(0,0,4)
-    # b.print_pretty()
-    # print(b)
+    test_dfs_or_bfs(False, second_moves)
+    b=Board()
+    b.update(0,0,4)
+    b.print_pretty()
+    print(b)
     g = Board()
     #Place the 28 assignments in first_moves on the board.
     for trip in second_moves:
         g.update(trip[0],trip[1],trip[2])
     g.print_pretty()
-    print(g)
-    print(g.find_most_constrained_cell())
-    print(g.failure_test())
     g.rows[6][3] = []
-    print(g.find_most_constrained_cell())
-    print(g.failure_test())
